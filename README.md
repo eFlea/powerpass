@@ -6,7 +6,7 @@ You must specify the path to the wordlist and how many words you want in your pa
 
 You must specify a minimum of 6 words to get a cracking resistant passphrase (Without Mangling).
 
-####PS> .\New-SecurePassword.ps1 -EFFWordlist \<Path to EFF Wordlist\> -NumWords \<num\>
+#### PS> .\New-SecurePassword.ps1 -EFFWordlist \<Path to EFF Wordlist\> -NumWords \<num\>
 
 ## Options:
 
