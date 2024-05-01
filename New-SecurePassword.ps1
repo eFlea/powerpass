@@ -166,7 +166,7 @@ function New-SecurePassword {
         $inputString = Get-Words -Dictionary $wordDictionary -Rolls $NumWords
         $PassLength = $inputString.Length # See stupidity above, for now we just use the whole thing, this would get removed when we want to go back to that.
         Write-Verbose "Now that we have those words, we're going to concatentate them together to generate your passphrase."
-        Write-Verbose""
+        Write-Verbose ""
         Write-Verbose "Here's your brand new Diceware(tm) Passphrase:"
         Write-Verbose "$inputString"
         Write-Verbose ""
