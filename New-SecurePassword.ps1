@@ -205,7 +205,7 @@ function New-SecurePassword {
         $numDigits = ($toMangle - $numSymbols)
 
         # Define our symbols list and exclude the ones we shouldn't use if the user had some of those
-        $symbols = '!@#$%^&*()_+{}|:<>?-=[]\;,./ '
+        $symbols = '!@#$%^&*()_+{}|:<>?-=[]\;,./'
         $excludedSymbols = $Exclude.ToCharArray()
         $availableSymbols = $symbols.ToCharArray() | Where-Object { $excludedSymbols -notcontains $_ }
 
