@@ -167,10 +167,9 @@ function New-SecurePassword {
     }
 
     if ($NumWords -lt 6) {
-        Write-Host "NOTE! Running this with -NumWords less than 6 generates less secure passphrases!"
-        Write-Host ""
+        Write-Host "NOTE! Running this with -NumWords less than 6 generates less secure passphrases!" -ForegroundColor Red
         if ($NoMangle){
-            Write-Host "If you use the -NoMangle flag, -NumWords MUST be at least 6 to run!"
+            Write-Host "If you use the -NoMangle flag, -NumWords MUST be at least 6 to run!" -ForegroundColor Red
             return
         }
     }
