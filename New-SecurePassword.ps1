@@ -255,8 +255,9 @@ function New-SecurePassword {
     Write-Verbose "and you picked one at random.  So, just without any mangling, someone would have to work through that just to crack it, you can figure (7776^$numWords)/2 in the average case."
     Write-Verbose ""
     Write-Verbose "Wolfram is pretty good at doing this kinda math.  Hivesystems said BCrypt could be cracked on 12 4090s (very slow on GPUs cuz it doesn't parallelize well) at a rate of 1 MegaHash/second."
-    Write-Verbose "Open the link below to get an estimate of how long your unmangled password would last against a cracking machine if your hash was stored as Bcrypt."
-    Write-Verbose "Note that this doesn't mean your password is secure for that long, the plaintext version is going to get stolen way before then, and besides," 
+    Write-Verbose "Open the link below to get an estimate of how long your unmangled password would last against a cracking machine if your hash was stored as Bcrypt.  Other stuff will DEFINITELY crack WAY faster than that."
+    Write-Verbose "Keep in mind that these are the kinds of things that hobbyists might have at home.  Nation States would have REAL resources.  These are on things you play video games on, not on something purpose built."
+    Write-Verbose "Also note that this doesn't mean your password is secure for that long, the plaintext version is going to get stolen way before then, and besides," 
     Write-Verbose "quantum computers will happen way before then and Bcrypt is not a quantum-resistant algorithm."
     Write-Verbose ""
     Write-Verbose "https://www.wolframalpha.com/input?i=%287776%5E$numWords+hashes%2F2%29+%2F+1+megahashes%2Fsecond+in+years"
@@ -264,6 +265,10 @@ function New-SecurePassword {
     Write-Verbose "The 1 MegaHash/Second number came from the paper linked below."
     Write-Verbose "https://www.hivesystems.com/blog/are-your-passwords-in-the-green?utm_source=header"
     Write-Verbose "(This paper is real stupid, ignore it, it just has convenient numbers to ballpark from)"
+    Write-Verbose ""
+    Write-Verbose "Here's what it would look like if your passphrase was hashed as NTLM based off 12x the 4090 linked at the bottom."
+    Write-Verbose ""
+    Write-Verbose "https://www.wolframalpha.com/input?i=%287776%5E$numWords+hashes%2F2%29+%2F+%28255.7*12%29+GigaHashes%2Fseconds+in+years"
     Write-Verbose ""
     Write-Verbose "But.  The mangling we've done changes things in a weird way because now we're not dealing"
     Write-Verbose "with just the idea that each of the words is a 'character' in the keyspace, now we've introduced the idea"
@@ -273,6 +278,9 @@ function New-SecurePassword {
     Write-Verbose ""
     Write-Verbose "Here's some data on cracking hashes that actually parallelize well (aka not Bcrypt)"
     Write-Verbose "https://github.com/search?q=hashcat+benchmark&type=repositories"
+    Write-Verbose "This person has a 4090. https://github.com/cyclone-github/gpu_benchmarks/blob/main/nvidia_4090_msi_gaming_trio_benchmark.txt"
+
+
     Write-Verbose ""
     Write-MultiColorText -InputString $truncatedString
 }
