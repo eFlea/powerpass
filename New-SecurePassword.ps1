@@ -29,10 +29,11 @@ Also planned is the option to let the WIZARD know what restrictions a developer 
 e.g. no more than 20 characters, must use one of the following characters, may not use any of the following characters, etc. so that the WIZARD can
 still create a strong password for you
 #>
+
 function Show-Help {
     Write-Host "Usage of $($MyInvocation.MyCommand.Name):"
     Write-Host "`t-EFFWordlistPath [string]: <MANDATORY> Path to the EFF Large Wordlist - You can find this at https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt if you don't already have it."
-    Write-Host "`t-NumWords [int]: <MANDATORY> Defaults to How many words long your passphrase should be.  This has to be at least 6.
+    Write-Host "`t-NumWords [int]: <MANDATORY> Defaults to How many words long your passphrase should be.  This has to be at least 6."
     Write-Host "`t-Exclude [string]: (Optional) Any symbols you'd like to avoid using in your password."
     Write-Host "`t-Verbose: Displays extra information about how your password is generated."
     Write-Host "`t-Help: Display this help message"
