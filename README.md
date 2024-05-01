@@ -10,9 +10,9 @@ PS> .\New-SecurePassword.ps1 -EFFWordlist \<Path to EFF Wordlist\> -NumWords \<n
 
 ## Options:
 
-### -Exclude '<symbols to exlude from your passphrase'
+#### -Exclude '<symbols to exlude from your passphrase'
   Excludes symbols from your passphrase mangling
-### -Verbose
+#### -Verbose
   Gives you extra information about the generation of your passphrase
 
 ## Output:
