@@ -158,7 +158,7 @@ function New-SecurePassword {
     }
 
     if ($NumWords -lt 6) {
-        Write-Host "$NumWords must be at least 6."
+        Write-Host "In order to generate secure passphrases, -NumWords must be at least 6."
         return
     }
 
