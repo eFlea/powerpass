@@ -139,9 +139,9 @@ function Write-MultiColorText {
         }
     }
     Write-Host ""
+    Write-Host ""
     Write-Host "Please advised that if someone can read your screen right now, either through screenshots or other means, they can read this password."
     Write-Host "Have a nice day."
-    Write-Host ""
 }
 
 function New-SecurePassword {
@@ -157,14 +157,21 @@ function New-SecurePassword {
         Show-Help
         exit
     }
-
+        Write-Verbose "Ok, Let's generate a passphrase.  We start by rolling 5 dice $NumWords times, and we're going to match that up with words in the EFF wordlist to generate a passphrase for you."
+        Write-Verbose "Let's get started."
+        Write-Verbose ""
         #Generate a passphrase
         $wordDictionary = Import-Wordlist -FilePath $EFFWordlistPath
         $inputString = Get-Words -Dictionary $wordDictionary -Rolls $NumWords
         $PassLength = $inputString.Length # See stupidity above, for now we just use the whole thing, this would get removed when we want to go back to that
 
-        Write-Verbose "We generated the following passphrase, consisting of $NumWords words."
+        Write-Verbose "Now that we have those words, we're going to concatentate them together to generate your passphrase."
+        Write-Verbose "Here's your brand new Diceware(tm) Passphrase."
         Write-Verbose "$inputString"
+        Write-Verbose ""
+        Write-Verbose "But, we're not going to stop there.  We're going to mangle your passphrase for some extra security."
+        Write-Verbose "We're going to add symbols, and digits to your passphrase, and we're also going to turn some of those lowercase characters to uppercase characters."
+        Write-Verbose ""
 
         # If we need a shorter password because of requirements above, we can cut this down here
         if ($inputString.Length -gt $PassLength) {
@@ -184,7 +191,7 @@ function New-SecurePassword {
         $numDigits = ($toMangle - $numSymbols)
 
         # Define our symbols list and exclude the ones we shouldn't use if the user had some of those
-        $symbols = '!@#$%^&*()_+{}|:<>?-=[]\;,./'
+        $symbols = '!@#$%^&*()_+{}|:<>?-=[]\;,./ '
         $excludedSymbols = $Exclude.ToCharArray()
         $availableSymbols = $symbols.ToCharArray() | Where-Object { $excludedSymbols -notcontains $_ }
 
