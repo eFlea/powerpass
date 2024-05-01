@@ -158,8 +158,8 @@ function New-SecurePassword {
     }
 
     if ($NumWords -lt 6) {
-        Write-Host "In order to generate secure passphrases, -NumWords must be at least 6."
-        return
+        Write-Host "NOTE! In order to generate cracking resistant passphrases (without mangling), -NumWords must be at least 6."
+        Write-Host ""
     }
 
     if ($EFFWordlistPath -eq "") {
