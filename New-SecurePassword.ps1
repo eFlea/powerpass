@@ -157,16 +157,17 @@ function New-SecurePassword {
         Show-Help
         exit
     }
-        Write-Verbose "Ok, Let's generate a passphrase.  We start by rolling 5 dice $NumWords times, and we're going to match that up with words in the EFF wordlist to generate a passphrase for you."
+        Write-Verbose "Ok, Let's generate a passphrase.  We start by rolling 5 dice $NumWords times (because you asked me to generate $numWords words in your passphrase), and we're going to match that up with words in the EFF wordlist to generate a passphrase for you."
         Write-Verbose "Let's get started."
+
         Write-Verbose ""
         #Generate a passphrase
         $wordDictionary = Import-Wordlist -FilePath $EFFWordlistPath
         $inputString = Get-Words -Dictionary $wordDictionary -Rolls $NumWords
-        $PassLength = $inputString.Length # See stupidity above, for now we just use the whole thing, this would get removed when we want to go back to that
-
+        $PassLength = $inputString.Length # See stupidity above, for now we just use the whole thing, this would get removed when we want to go back to that.
         Write-Verbose "Now that we have those words, we're going to concatentate them together to generate your passphrase."
-        Write-Verbose "Here's your brand new Diceware(tm) Passphrase."
+        Write-Verbose""
+        Write-Verbose "Here's your brand new Diceware(tm) Passphrase:"
         Write-Verbose "$inputString"
         Write-Verbose ""
         Write-Verbose "But, we're not going to stop there.  We're going to mangle your passphrase for some extra security."
@@ -221,7 +222,9 @@ function New-SecurePassword {
             #$truncatedString = $Remove-LastNonSpecialDigit -InputString $truncatedString -SpecialCharacters $availableSymbols
         }
 
-        Write-Verbose "We added $numSymbols symbols and $numDigits digits to that, which changed it to $truncatedString."
+        Write-Verbose "We added $numSymbols symbols and $numDigits digits to your passphrase, which changed it to:"
+        Write-Verbose "$truncatedString"
+        Write-Verbose ""
 
         # Add in uppercase letters
         # First we need to find out the location of all our lowercase letters
@@ -241,11 +244,19 @@ function New-SecurePassword {
             $charArray[$pos] = [char]::ToUpper($charArray[$pos])
         }
     $truncatedString = -join $charArray
-    Write-Verbose "That gave us your final password of $truncatedString!"
+    Write-Verbose "That gave us your final password of:"
+    Write-Verbose "$truncatedString"
+    Write-Verbose ""
     Write-Verbose "And if you're curious about the math behind the strength of your password, I am too, I'm just kinda tired and I don't feel like working this out tonight."
-    Write-Verbose "But here's the basics - There are 7776 words in the list, and you chose a passphrase with $numWords in it.  So, right off the bat, if you were only thinking about diceware, you've got a keyspace of 7776^$numWords that someone has to work through to crack just the passphrase without mangling."
+    Write-Verbose "But here's the basics - There are 7776 words in the list, and you chose a passphrase with $numWords in it."
+    Write-Verbose "So, right off the bat, if you were only thinking about diceware, you've got a keyspace of 7776^$numWords"
+    Write-Verbose "that someone has to work through to crack just the passphrase without mangling."
     Write-Verbose "Wolfram is pretty good at doing this kinda math."
-    Write-Verbose "But.  The mangling we've done changes things in a weird way because now we're not dealing with just the idea that each of the words is a 'character' in the keyspace, now we've introduced the idea that there could be symbols and digits in between random letters anywhere inside of any of those words or even between them."
-    Write-Verbose "I think this should actually represent a pretty significant improvement over Diceware while still maintaining the human readable/typeable nature but I'm gonna have to do some math to prove that out.  Wanna help?"
+    Write-Verbose "But.  The mangling we've done changes things in a weird way because now we're not dealing "
+    Write-Verbose "with just the idea that each of the words is a 'character' in the keyspace, now we've introduced the idea"
+    Write-Verbose "that there could be symbols and digits in between random letters anywhere inside of any of those words or even between them."
+    Write-Verbose "I think this should actually represent a pretty significant improvement over Diceware while still maintaining the"
+    Write-Verbose "human readable/typeable nature but I'm gonna have to do some math to prove that out.  Wanna help?"
+    Write-Verbose ""
     Write-MultiColorText -InputString $truncatedString
 }
