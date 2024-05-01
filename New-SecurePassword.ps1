@@ -139,8 +139,8 @@ function Write-MultiColorText {
     }
     Write-Host ""
     Write-Host ""
-    Write-Host "Please advised that if someone can read your screen right now, either through screenshots or other means, they can read this password."
-    Write-Host "Have a nice day."
+    Write-Host "Don't forget that if someone can read your screen right now, either through screenshots or other means, they can read this password."
+    Write-Host "Please enjoy."
 }
 
 function New-SecurePassword {
