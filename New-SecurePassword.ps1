@@ -43,9 +43,7 @@ function Show-Help {
     exit
 }
 
-if ($Help) {
-    Show-Help
-}
+
 
 function Import-Wordlist {
     #Import the dictionary from a file
@@ -145,6 +143,11 @@ function New-SecurePassword {
         [int]$PassLength,       #this is in here cuz i'm planning to put something in here about how you can alter these to fit stupid password requirements like they only accept 20 chars...
         [string]$Exclude = "" #Default to empty string, but see stupidity notes above, you might not be able to use certain symbols
     )
+    if ($Help) {
+        Show-Help
+        exit
+    }
+
         #Generate a passphrase
         $wordDictionary = Import-Wordlist -FilePath $EFFWordlistPath
         $inputString = Get-Words -Dictionary $wordDictionary -Rolls $NumWords
@@ -164,11 +167,11 @@ function New-SecurePassword {
         # First we need to add symbols and digits
         # To keep things typeable, I'm guessing we shouldn't add more than 1/4 of the total characters, but as this grows large, maybe that's too much?  Maybe this should be more like 1/3 or 1/8?
 
-        [int] $quarter = $passLength/4
+        [int] $toMangle = $passLength/8
         # Add a little jitter so it's not too predictable
-        $quarter = ($quarter + (Get-Random -Minimum -1 -Maximum 2))
-        $numSymbols = Get-Random -Minimum 1 -Maximum $quarter
-        $numDigits = ($quarter - $numSymbols)
+        $toMangle = ($toMangle + (Get-Random -Minimum -1 -Maximum 2))
+        $numSymbols = Get-Random -Minimum 1 -Maximum $toMangle
+        $numDigits = ($toMangle - $numSymbols)
 
         # Define our symbols list and exclude the ones we shouldn't use if the user had some of those
         $symbols = '!@#$%^&*()_+{}|:<>?-=[]\;,./'
