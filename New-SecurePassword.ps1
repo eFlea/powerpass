@@ -32,7 +32,7 @@ still create a strong password for you
 function Show-Help {
     Write-Host "Usage of $($MyInvocation.MyCommand.Name):"
     Write-Host "`t-EFFWordlistPath [string]: <MANDATORY> Path to the EFF Large Wordlist - You can find this at https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt if you don't already have it."
-    Write-Host "`t-NumWords [int]: <MANDATORY> Defaults to How many words long your passphrase should be.  If you're not sure, 8 is 'Generally Strong'."
+    Write-Host "`t-NumWords [int]: <MANDATORY> Defaults to How many words long your passphrase should be.  This has to be at least 6.
     Write-Host "`t-Exclude [string]: (Optional) Any symbols you'd like to avoid using in your password."
     Write-Host "`t-Verbose: Displays extra information about how your password is generated."
     Write-Host "`t-Help: Display this help message"
@@ -157,6 +157,13 @@ function New-SecurePassword {
         Show-Help
         exit
     }
+
+    if ($NumWords -lt 6) {
+        Write-Host "$NumWords must be at least 6."
+        exit
+    }
+
+
         Write-Verbose "Ok, Let's generate a passphrase.  We start by rolling 5 dice $NumWords times (because you asked me to generate $numWords words in your passphrase),"
         Write-Verbose "and we're going to match that up with words in the EFF wordlist to generate a passphrase for you."
         Write-Verbose "Let's get started."
@@ -252,7 +259,8 @@ function New-SecurePassword {
     Write-Verbose "And if you're curious about the math behind the strength of your password, I am too, I'm just kinda tired and I don't feel like working this out tonight."
     Write-Verbose "But here's the basics - There are 7776 words in the list, and you chose a passphrase with $numWords words in it."
     Write-Verbose "So, right off the bat, if you were only thinking about diceware, you've got a keyspace of 7776^$numWords possible passwords to exhaust which, if you picked enough words (like 7 or 8) is a lot in the worst case,"
-    Write-Verbose "and you picked one at random.  So, just without any mangling, someone would have to work through that just to crack it, you can figure (7776^$numWords)/2 in the average case."
+    Write-Verbose "and you picked one at random."
+    Write-Verbose "So, just without any mangling, someone would have to work through that just to crack it, you can figure (7776^$numWords)/2 in the average case."
     Write-Verbose ""
     Write-Verbose "Wolfram is pretty good at doing this kinda math.  Hivesystems said BCrypt could be cracked on 12 4090s (very slow on GPUs cuz it doesn't parallelize well) at a rate of 1 MegaHash/second."
     Write-Verbose "Open the link below to get an estimate of how long your unmangled password would last against a cracking machine if your hash was stored as Bcrypt.  Other stuff will DEFINITELY crack WAY faster than that."
@@ -270,11 +278,15 @@ function New-SecurePassword {
     Write-Verbose ""
     Write-Verbose "https://www.wolframalpha.com/input?i=%287776%5E$numWords+hashes%2F2%29+%2F+%28255.7*12%29+GigaHashes%2Fseconds+in+years"
     Write-Verbose ""
+    Write-Verbose "Now that you've got that site up, you might want to play with that exponent and take a second and let how bad anything with less than 6 words is soak in."
     Write-Verbose "But.  The mangling we've done changes things in a weird way because now we're not dealing"
     Write-Verbose "with just the idea that each of the words is a 'character' in the keyspace, now we've introduced the idea"
     Write-Verbose "that there could be symbols and digits in between random letters anywhere inside of any of those words or even between them."
     Write-Verbose "I think this should actually represent a pretty significant improvement over Diceware while still maintaining the"
     Write-Verbose "human readable/typeable nature but I'm gonna have to do some math to prove that out."
+    Write-Verbose "I don't know if it's gonna be a BIG difference if you have to deal with something the size of 3, 4, or 5 words, like some Developers want you to do"
+    Write-Verbose "that's the question that I'm really wondering about."
+    Write-Verbose "When the password has to be that small, is this even reasonable?"
     Write-Verbose ""
     Write-Verbose "Here's some data on cracking hashes that actually parallelize well (aka not Bcrypt)"
     Write-Verbose "https://github.com/search?q=hashcat+benchmark&type=repositories"
