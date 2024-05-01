@@ -155,12 +155,11 @@ function New-SecurePassword {
     )
     if ($Help) {
         Show-Help
-        exit
     }
 
     if ($NumWords -lt 6) {
         Write-Host "$NumWords must be at least 6."
-        exit
+        return
     }
 
 
