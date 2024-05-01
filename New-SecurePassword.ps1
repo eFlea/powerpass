@@ -70,7 +70,6 @@ function Write-MultiColorText {
         [string]$InputString
     )
 
-    $coloredText =""
     foreach ($char in $InputString.ToCharArray()) {
         if ($char -cmatch '[a-z]') {
             Write-Host $char -NoNewLine -ForegroundColor White
@@ -123,10 +122,10 @@ function New-SecurePassword {
 
         # Define our symbols list and exclude the ones we shouldn't use if the user had some of those
         $symbols = '!@#$%^&*()_+{}|:<>?-=[]\;,./'
-        $excludedSymbosl = $Exclude.ToCharArray()
+        $excludedSymbols = $Exclude.ToCharArray()
         $availableSymbols = $symbols.ToCharArray() | Where-Object { $excludedSymbols -notcontains $_ }
 
-        if {$Exclude -ne ""} {
+        if ($Exclude -ne "") {
             Write-Verbose "You told us to exclude the symbols $Exclude, so we're going to be careful to leave those out of your password."
         }
 
@@ -171,8 +170,7 @@ function New-SecurePassword {
         foreach ($pos in $selectedPositions) {
             $charArray[$pos] = [char]::ToUpper($charArray[$pos])
         }
-        $truncatedString = -join $charArray
-    )
+    $truncatedString = -join $charArray
     Write-Verbose "That gave us your final password of $truncatedString!"
     Write-MultiColorText -InputString $truncatedString
 }
