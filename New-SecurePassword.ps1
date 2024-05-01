@@ -68,20 +68,20 @@ function Remove-LastNonSpecialDigit {
 function Write-MultiColorText {
     param(
         [string]$InputString
-    )
+    )    
 
     foreach ($char in $InputString.ToCharArray()) {
         if ($char -cmatch '[a-z]') {
             Write-Host $char -NoNewLine -ForegroundColor White
         }
         elseif ($char -cmatch '[A-Z]') {
-            Write-Host $char -NoNewLine -ForegroundColor White
+            Write-Host $char -NoNewLine -ForegroundColor Red
         }
         elseif ($char -cmatch '[0-9]') {
-            Write-Host $char -NoNewLine -ForegroundColor White
+            Write-Host $char -NoNewLine -ForegroundColor Blue
         }
         elseif ($char -cmatch '[\W]') {
-            Write-Host $char -NoNewLine -ForegroundColor White
+            Write-Host $char -NoNewLine -ForegroundColor Green
         }
     }
     Write-Host ""
