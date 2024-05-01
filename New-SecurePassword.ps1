@@ -162,6 +162,11 @@ function New-SecurePassword {
         return
     }
 
+    if ($EFFWordlistPath -eq "") {
+        Write-Host "You have to specify the path to the EFF Wordlist, if you don't have a copy locally you can get a copy out of my Github repo at https://github.com/eFlea/powerpass/blob/main/eff_large_wordlist.txt or directly from the EFF at https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt"
+        return
+    }
+
 
         Write-Verbose "Ok, Let's generate a passphrase.  We start by rolling 5 dice $NumWords times (because you asked me to generate $numWords words in your passphrase),"
         Write-Verbose "and we're going to match that up with words in the EFF wordlist to generate a passphrase for you."
