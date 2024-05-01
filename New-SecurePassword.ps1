@@ -157,7 +157,8 @@ function New-SecurePassword {
         Show-Help
         exit
     }
-        Write-Verbose "Ok, Let's generate a passphrase.  We start by rolling 5 dice $NumWords times (because you asked me to generate $numWords words in your passphrase), and we're going to match that up with words in the EFF wordlist to generate a passphrase for you."
+        Write-Verbose "Ok, Let's generate a passphrase.  We start by rolling 5 dice $NumWords times (because you asked me to generate $numWords words in your passphrase),"
+        Write-Verbose "and we're going to match that up with words in the EFF wordlist to generate a passphrase for you."
         Write-Verbose "Let's get started."
 
         Write-Verbose ""
@@ -170,6 +171,7 @@ function New-SecurePassword {
         Write-Verbose "Here's your brand new Diceware(tm) Passphrase:"
         Write-Verbose "$inputString"
         Write-Verbose ""
+        Write-Verbose "That by itself, if you put enough words in there, could be a pretty ok password, and can be resistant to cracking."
         Write-Verbose "But, we're not going to stop there.  We're going to mangle your passphrase for some extra security."
         Write-Verbose "We're going to add symbols, and digits to your passphrase, and we're also going to turn some of those lowercase characters to uppercase characters."
         Write-Verbose ""
@@ -248,9 +250,9 @@ function New-SecurePassword {
     Write-Verbose "$truncatedString"
     Write-Verbose ""
     Write-Verbose "And if you're curious about the math behind the strength of your password, I am too, I'm just kinda tired and I don't feel like working this out tonight."
-    Write-Verbose "But here's the basics - There are 7776 words in the list, and you chose a passphrase with $numWords in it."
-    Write-Verbose "So, right off the bat, if you were only thinking about diceware, you've got a keyspace of 7776^$numWords"
-    Write-Verbose "that someone has to work through to crack just the passphrase without mangling."
+    Write-Verbose "But here's the basics - There are 7776 words in the list, and you chose a passphrase with $numWords words in it."
+    Write-Verbose "So, right off the bat, if you were only thinking about diceware, you've got a keyspace of 7776^$numWords possible passwords to exhaust which is a lot in the worst case,"
+    Write-Verbose "and you picked one at random.  So, just without any mangling, someone would have to work through that just to crack it, you can figure (7776^$numWords)/2 in the average case."
     Write-Verbose "Wolfram is pretty good at doing this kinda math."
     Write-Verbose "But.  The mangling we've done changes things in a weird way because now we're not dealing "
     Write-Verbose "with just the idea that each of the words is a 'character' in the keyspace, now we've introduced the idea"
