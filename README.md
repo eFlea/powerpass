@@ -13,3 +13,10 @@ Options:
   Excludes symbols from your passphrase mangling
 -Verbose
   Gives you extra information about the generation of your passphrase
+
+Output:
+
+Lowercase Password Characters are White
+Uppercase Password Characters are Red
+Numerical Password Characters are Blue
+All Other Password Characters are Green 
