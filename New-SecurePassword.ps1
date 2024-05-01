@@ -1,3 +1,52 @@
+<#
+.SYNOPSIS
+This script generates a strong password based on diceware and adds some automatic mangling to help resist cracking.
+This should generate passwords that are relatively easy to type yet hard to crack.
+
+.DESCRIPTION
+This PowerShell script is intended to read the EFF large wordlist (https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt), 
+then simulates rolling dice to generate words for a passphrase.
+It concatenates those words into a passphrase, then adds a random number of symbols, and digits.  
+Then it converts a random number of lowercase letters to uppercase, generating your final password.
+
+.PARAMETER EFFWordlistPath
+The path to the text file containing the EFF Large Wordlist. 
+
+.PARAMETER NumWords
+How many words should be generated in your passphrase.
+
+.PARAMETER Verbose
+Generates extra output explaining how your password is generated.
+
+.EXAMPLE
+PS> .\New-SecurePassword.ps1 -EFFWordlistPath "c:\users\username\Downloads\eff_large_wordlist.txt" -NumWords 8 -Verbose
+
+.NOTES
+Future improvements will include a WIZARD mode where you just let the script know whether you need a low, medium, 
+or high security password, and whether you're going to need a typeable password or something that you'll just be copying out of a password wallet.
+Also planned is the option to let the WIZARD know what restrictions a developer has placed on your password - 
+e.g. no more than 20 characters, must use one of the following characters, may not use any of the following characters, etc. so that the WIZARD can
+still create a strong password for you
+#>
+function Show-Help {
+    Write-Host "Usage of $($MyInvocation.MyCommand.Name):"
+    Write-Host "`t-EFFWordlistPath [string]: Path to the EFF Large Wordlist - You can find this at https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt if you don't already have it."
+    Write-Host "`t-NumWords [int]: How many words long your passphrase should be.  If you're not sure, 8 is 'Generally Strong'."
+    Write-Host "`t-Verbose: Displays extra information about how your password is generated."
+    Write-Host "`t-Help: Display this help message"
+    Write-Host ""
+    Write-Host "Example:"
+    Write-Host "`tPS> .\New-SecurePassword.ps1 -EFFWordlistPath "c:\users\username\Downloads\eff_large_wordlist.txt" -NumWords 8 -Verbose"
+    Write-Host ""
+    Write-Host "This script generates a strong password based on diceware and adds some automatic mangling to help resist cracking."
+    Write-Host "This should generate passwords that are relatively easy to type yet hard to crack."
+    exit
+}
+
+if ($Help) {
+    Show-Help
+}
+
 function Import-Wordlist {
     #Import the dictionary from a file
     param (
@@ -90,6 +139,7 @@ function Write-MultiColorText {
 function New-SecurePassword {
     [CmdletBinding()]
     param(
+        [switch]$Help,
         [string]$EFFWordlistPath,
         [int]$NumWords,
         [int]$PassLength,       #this is in here cuz i'm planning to put something in here about how you can alter these to fit stupid password requirements like they only accept 20 chars...
@@ -112,7 +162,7 @@ function New-SecurePassword {
         $originalTruncatedString = $truncatedString
 
         # First we need to add symbols and digits
-        # To keep things typeable, I'm guessing we shouldn't add more than 1/4 of the total characters, but as this grows large, maybe that's too much?
+        # To keep things typeable, I'm guessing we shouldn't add more than 1/4 of the total characters, but as this grows large, maybe that's too much?  Maybe this should be more like 1/3 or 1/8?
 
         [int] $quarter = $passLength/4
         # Add a little jitter so it's not too predictable
