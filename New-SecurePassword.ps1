@@ -95,7 +95,7 @@ function New-SecurePassword {
         [int]$NumWords,
         [int]$PassLength,       #this is in here cuz i'm planning to put something in here about how you can alter these to fit stupid password requirements like they only accept 20 chars...
         [string]$Exclude = "" #Default to empty string, but see stupidity notes above, you might not be able to use certain symbols
-        
+    )
         #Generate a passphrase
         $wordDictionary = Import-Wordlist -FilePath $EFFWordlistPath
         $inputString = Get-Words -Dictionary $wordDictionary -Rolls $NumWords
