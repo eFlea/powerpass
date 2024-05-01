@@ -11,12 +11,19 @@ It concatenates those words into a passphrase, then adds a random number of symb
 Then it converts a random number of lowercase letters to uppercase, generating your final password.
 
 .PARAMETER EFFWordlistPath
+Mandatory. 
 The path to the text file containing the EFF Large Wordlist. 
 
 .PARAMETER NumWords
+Mandatory.
 How many words should be generated in your passphrase.
 
+.PARAMETER NoMangle
+Optional.
+Generates a true Diceware passphrase with Upper and Lowercase characters.
+
 .PARAMETER Verbose
+Optional.
 Generates extra output explaining how your password is generated.
 
 .EXAMPLE
@@ -35,6 +42,7 @@ function Show-Help {
     Write-Host "`t-EFFWordlistPath [string]: <MANDATORY> Path to the EFF Large Wordlist - You can find this at https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt if you don't already have it."
     Write-Host "`t-NumWords [int]: <MANDATORY> Defaults to How many words long your passphrase should be.  This has to be at least 6."
     Write-Host "`t-Exclude [string]: (Optional) Any symbols you'd like to avoid using in your password."
+    Write-Host "`t-NoMangle: (Optional) Create a Diceware password without extra digits and symbols mangling."
     Write-Host "`t-Verbose: Displays extra information about how your password is generated."
     Write-Host "`t-Help: Display this help message"
     Write-Host ""
@@ -146,6 +154,7 @@ function Write-MultiColorText {
 function New-SecurePassword {
     [CmdletBinding()]
     param(
+        [switch]$NoMangle,
         [switch]$Help,
         [string]$EFFWordlistPath,
         [int]$NumWords,
@@ -158,8 +167,12 @@ function New-SecurePassword {
     }
 
     if ($NumWords -lt 6) {
-        Write-Host "NOTE! In order to generate cracking resistant passphrases (without mangling), -NumWords must be at least 6."
+        Write-Host "NOTE! Running this with -NumWords less than 6 generates less secure passphrases!"
         Write-Host ""
+        if ($NoMangle){
+            Write-Host "If you use the -NoMangle flag, -NumWords MUST be at least 6 to run!"
+            return
+        }
     }
 
     if ($EFFWordlistPath -eq "") {
@@ -183,6 +196,8 @@ function New-SecurePassword {
         Write-Verbose "$inputString"
         Write-Verbose ""
         Write-Verbose "That by itself, if you put enough words in there, could be a pretty ok password, and can be resistant to cracking."
+        Write-Verbose "You generally need about 6 words to resist decent cracking attempts for any reasonable amounts of time."
+        Write-Verbose ""
         Write-Verbose "But, we're not going to stop there.  We're going to mangle your passphrase for some extra security."
         Write-Verbose "We're going to add symbols, and digits to your passphrase, and we're also going to turn some of those lowercase characters to uppercase characters."
         Write-Verbose ""
@@ -195,14 +210,21 @@ function New-SecurePassword {
         }
         $originalTruncatedString = $truncatedString
 
-        # First we need to add symbols and digits
-        # To keep things typeable, I've set this to 1/8, but this isn't great for small passphrases... Maybe this needs to be adjusted by # of words or based on the limitations the developers set?
-
-        [int] $toMangle = $passLength/8
-        # Add a little jitter so it's not too predictable
-        $toMangle = ($toMangle + (Get-Random -Minimum -1 -Maximum 2))
-        $numSymbols = Get-Random -Minimum 1 -Maximum $toMangle
-        $numDigits = ($toMangle - $numSymbols)
+        if (-not $NoMangle) {
+            # First we need to add symbols and digits
+            if ($numWords -ge 6) {
+                [int] $toMangle = $passLength/12
+            } else {
+                [int] $toMangle = $passLength/4
+            }
+            # Add a little jitter so it's not too predictable
+            $toMangle = ($toMangle + (Get-Random -Minimum -1 -Maximum 2))
+            $numSymbols = Get-Random -Minimum 1 -Maximum $toMangle
+            $numDigits = ($toMangle - $numSymbols)
+        } else {
+            $numSymbols = 0
+            $numDigits = 0
+        }
 
         # Define our symbols list and exclude the ones we shouldn't use if the user had some of those
         $symbols = '!@#$%^&*()_+{}|:<>?-=[]\;,./'
@@ -247,8 +269,12 @@ function New-SecurePassword {
                 $lowercasePositions += $i
             }
         }
-        # Now we need to decide how many to convert... i'm just kinda letting this one go but maybe should restrict it to like.. no more than half? It feels... cluttered.
-        $numletterstoConvert = Get-Random -Minimum 1 -Maximum ($lowercasePositions.Count)
+        # We only need to convert a couple of these
+        if ($NumWords -ge 6) {
+            $numletterstoConvert = Get-Random -Minimum 1 -Maximum ($lowercasePositions.Count/10)
+        } else {
+            $numletterstoConvert = Get-Random -Minimum 1 -Maximum ($lowercasePositions.Count/2)
+        }
         Write-Verbose "Then, we changed $numletterstoConvert lowercase letters to uppercase letters."
         $selectedPositions = Get-Random -InputObject $lowercasePositions -Count $numletterstoConvert
         $charArray = $truncatedString.ToCharArray()
