@@ -42,10 +42,8 @@ function Show-Help {
     Write-Host ""
     Write-Host "This script generates a strong password based on diceware and adds some automatic mangling to help resist cracking."
     Write-Host "This should generate passwords that are relatively easy to type yet hard to crack."
-    exit
+    return
 }
-
-
 
 function Import-Wordlist {
     #Import the dictionary from a file
