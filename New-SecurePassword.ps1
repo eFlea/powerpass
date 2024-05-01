@@ -1,6 +1,7 @@
 <#
 .SYNOPSIS
-This script generates a strong password based on diceware and adds some automatic mangling to help resist cracking.
+This script generates a strong password based on the Diceware Password Generation scheme (https://theworld.com/~reinhold/diceware.html)
+and adds some automatic mangling to help resist cracking.
 This should generate passwords that are relatively easy to type yet hard to crack.
 
 .DESCRIPTION
@@ -30,13 +31,14 @@ still create a strong password for you
 #>
 function Show-Help {
     Write-Host "Usage of $($MyInvocation.MyCommand.Name):"
-    Write-Host "`t-EFFWordlistPath [string]: Path to the EFF Large Wordlist - You can find this at https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt if you don't already have it."
-    Write-Host "`t-NumWords [int]: How many words long your passphrase should be.  If you're not sure, 8 is 'Generally Strong'."
+    Write-Host "`t-EFFWordlistPath [string]: <MANDATORY> Path to the EFF Large Wordlist - You can find this at https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt if you don't already have it."
+    Write-Host "`t-NumWords [int]: <MANDATORY> Defaults to How many words long your passphrase should be.  If you're not sure, 8 is 'Generally Strong'."
+    Write-Host "`t-Exclude [string]: (Optional) Any symbols you'd like to avoid using in your password."
     Write-Host "`t-Verbose: Displays extra information about how your password is generated."
     Write-Host "`t-Help: Display this help message"
     Write-Host ""
     Write-Host "Example:"
-    Write-Host "`tPS> .\New-SecurePassword.ps1 -EFFWordlistPath "c:\users\username\Downloads\eff_large_wordlist.txt" -NumWords 8 -Verbose"
+    Write-Host "`tPS> .\New-SecurePassword.ps1 -EFFWordlistPath "c:\users\username\Downloads\eff_large_wordlist.txt" -NumWords 8 -Exclude '$!@' -Verbose"
     Write-Host ""
     Write-Host "This script generates a strong password based on diceware and adds some automatic mangling to help resist cracking."
     Write-Host "This should generate passwords that are relatively easy to type yet hard to crack."
@@ -81,8 +83,9 @@ function Get-Words {
 
     $concatenatedResult = ""
     for ($i = 0; $i -lt $Rolls; $i++) {
-        $key = Roll-Dice -Count 5
+        $key = Roll-Dice -Count 5 
         $word = $Dictionary[$key]
+        Write-Verbose "You rolled $key, which maps to $word."
         if ($null -ne $word) {
             $concatenatedResult += $word
         } else {
@@ -115,7 +118,11 @@ function Remove-LastNonSpecialDigit {
 function Write-MultiColorText {
     param(
         [string]$InputString
-    )    
+    )
+
+    Write-Host ""
+    Write-Host "Here's your new password."
+    Write-Host ""
 
     foreach ($char in $InputString.ToCharArray()) {
         if ($char -cmatch '[a-z]') {
@@ -127,10 +134,13 @@ function Write-MultiColorText {
         elseif ($char -cmatch '[0-9]') {
             Write-Host $char -NoNewLine -ForegroundColor Blue
         }
-        elseif ($char -cmatch '[\W]') {
+        else{
             Write-Host $char -NoNewLine -ForegroundColor Green
         }
     }
+    Write-Host ""
+    Write-Host "Please advised that if someone can read your screen right now, either through screenshots or other means, they can read this password."
+    Write-Host "Have a nice day."
     Write-Host ""
 }
 
@@ -165,7 +175,7 @@ function New-SecurePassword {
         $originalTruncatedString = $truncatedString
 
         # First we need to add symbols and digits
-        # To keep things typeable, I'm guessing we shouldn't add more than 1/4 of the total characters, but as this grows large, maybe that's too much?  Maybe this should be more like 1/3 or 1/8?
+        # To keep things typeable, I've set this to 1/8, but this isn't great for small passphrases... Maybe this needs to be adjusted by # of words or based on the limitations the developers set?
 
         [int] $toMangle = $passLength/8
         # Add a little jitter so it's not too predictable
@@ -225,5 +235,10 @@ function New-SecurePassword {
         }
     $truncatedString = -join $charArray
     Write-Verbose "That gave us your final password of $truncatedString!"
+    Write-Verbose "And if you're curious about the math behind the strength of your password, I am too, I'm just kinda tired and I don't feel like working this out tonight."
+    Write-Verbose "But here's the basics - There are 7776 words in the list, and you chose a passphrase with $numWords in it.  So, right off the bat, if you were only thinking about diceware, you've got a keyspace of 7776^$numWords that someone has to work through to crack just the passphrase without mangling."
+    Write-Verbose "Wolfram is pretty good at doing this kinda math."
+    Write-Verbose "But.  The mangling we've done changes things in a weird way because now we're not dealing with just the idea that each of the words is a 'character' in the keyspace, now we've introduced the idea that there could be symbols and digits in between random letters anywhere inside of any of those words or even between them."
+    Write-Verbose "I think this should actually represent a pretty significant improvement over Diceware while still maintaining the human readable/typeable nature but I'm gonna have to do some math to prove that out.  Wanna help?"
     Write-MultiColorText -InputString $truncatedString
 }
