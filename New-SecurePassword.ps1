@@ -154,6 +154,7 @@ function New-SecurePassword {
     )
     if ($Help) {
         Show-Help
+        return
     }
 
     if ($NumWords -lt 6) {
