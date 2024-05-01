@@ -10,10 +10,13 @@ You must specify a minimum of 6 words to get a cracking resistant passphrase (Wi
 
 ## Options:
 
+#### -NoMangle
+  Makes a true Diceware Passphrase without adding symbols or digits
 #### -Exclude '<symbols to exlude from your passphrase'
-  Excludes symbols from your passphrase mangling
+  Excludes specific symbols from your passphrase mangling - i.e. don't use @ in my passphrase
 #### -Verbose
   Gives you extra information about the generation of your passphrase
+
 
 ## Output:
 
