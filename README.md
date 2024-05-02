@@ -16,6 +16,8 @@ You must specify a minimum of 6 words to get a cracking resistant passphrase (Wi
   Excludes specific symbols from your passphrase mangling - i.e. don't use @ in my passphrase
 #### -Verbose
   Gives you extra information about the generation of your passphrase
+#### -Help
+  Shows Help
 
 
 ## Output:
