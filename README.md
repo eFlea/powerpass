@@ -8,6 +8,14 @@ You must specify a minimum of 6 words to get a cracking resistant passphrase (Wi
 
 #### PS> .\New-SecurePassword.ps1 -EFFWordlist \<Path to EFF Wordlist\> -NumWords \<num\>
 
+## Required:
+
+#### -EFFWordlist
+  Path to EFFWordlist
+
+#### -NumWords
+  Number of Words to Generate in your Passphrase.
+
 ## Options:
 
 #### -NoMangle
