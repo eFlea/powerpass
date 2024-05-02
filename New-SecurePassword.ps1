@@ -139,7 +139,7 @@ function Write-MultiColorText {
             Write-Host $char -NoNewLine -ForegroundColor Red
         }
         elseif ($char -cmatch '[0-9]') {
-            Write-Host $char -NoNewLine -ForegroundColor Blue
+            Write-Host $char -NoNewLine -ForegroundColor Magenta
         }
         else{
             Write-Host $char -NoNewLine -ForegroundColor Green
