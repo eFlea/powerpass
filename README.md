@@ -1,6 +1,11 @@
 # New-SecurePassword.ps1
 This generates a mangled Diceware Passphrase for use as a password.
 
+NOTE!
+
+I haven't yet proved that my scheme actually generates good passwords, this is a PoC.
+USE YOUR PASSWORD MANAGER TO GENERATE PASSWORDS.
+
 ## Usage:
 You must specify the path to the wordlist and how many words you want in your passphrase.
 
